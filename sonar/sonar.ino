@@ -1,6 +1,6 @@
 #include<Servo.h>
 Servo sg90;
-const byte buton = 4;
+const byte button = 4;
 const byte buzzer = 7;
 const byte echo = 2;
 const byte trig = 3;
@@ -9,18 +9,18 @@ const byte led2 = 9;
 const byte led3 = 10;
 const byte led4 = 11;
 const byte led5 = 12;
-const byte pot_pini = A0;
-int pot_deger = 0;
-int pot_deger_ilk = 0;
-int sure = 0;
-int mesafe = 0;
-int alarm_mesafesi = 0;
+const byte pot = A0;
+int pot_val = 0;
+int pot_val_frst = 0;
+int time = 0;
+int distance = 0;
+int alarm_distance = 0;
 int pos = 0;
 void setup()
 {
   sg90.attach(5);
   sg90.write(90);
-  pinMode(buton , INPUT);
+  pinMode(button , INPUT);
   pinMode(buzzer , OUTPUT);
   pinMode(led1 , OUTPUT);
   pinMode(led2 , OUTPUT);
@@ -31,7 +31,7 @@ void setup()
   pinMode(trig , OUTPUT);
   Serial.begin(9600);
 
-  pot_deger_ilk = analogRead(pot_pini);
+  pot_val_frst = analogRead(pot);
   while (1)
   {
     for (int i = 8; i < 13; i++)
@@ -40,53 +40,53 @@ void setup()
       delay(50);
       digitalWrite(i, 0);
     }
-    pot_deger = analogRead(pot_pini);
-    if (pot_deger_ilk > pot_deger + 10 || pot_deger_ilk < pot_deger - 10)
+    pot_val = analogRead(pot);
+    if (pot_val_frst > pot_val + 10 || pot_val_frst < pot_val - 10)
       break;
   }
   while (1)
   {
-    pot_deger = analogRead(pot_pini);
-    pot_deger = map(pot_deger , 100 , 900, 1, 5);
-    if (pot_deger == 1)
+    pot_val = analogRead(pot);
+    pot_val = map(pot_val , 100 , 900, 1, 5);
+    if (pot_val == 1)
     {
-      alarm_mesafesi = 10;
+      alarm_distance = 10;
       digitalWrite(led1 , 1);
       digitalWrite(led2 , 0);
       digitalWrite(led3 , 0);
       digitalWrite(led4 , 0);
       digitalWrite(led5 , 0);
     }
-    else if (pot_deger == 2)
+    else if (pot_val == 2)
     {
-      alarm_mesafesi = 20;
+      alarm_distance = 20;
       digitalWrite(led1 , 1);
       digitalWrite(led2 , 1);
       digitalWrite(led3 , 0);
       digitalWrite(led4 , 0);
       digitalWrite(led5 , 0);
     }
-    else if (pot_deger == 3)
+    else if (pot_val == 3)
     {
-      alarm_mesafesi = 30;
+      alarm_distance = 30;
       digitalWrite(led1 , 1);
       digitalWrite(led2 , 1);
       digitalWrite(led3 , 1);
       digitalWrite(led4 , 0);
       digitalWrite(led5 , 0);
     }
-    else if (pot_deger == 4)
+    else if (pot_val == 4)
     {
-      alarm_mesafesi = 40;
+      alarm_distance = 40;
       digitalWrite(led1 , 1);
       digitalWrite(led2 , 1);
       digitalWrite(led3 , 1);
       digitalWrite(led4 , 1);
       digitalWrite(led5 , 0);
     }
-    else if (pot_deger == 5)
+    else if (pot_val == 5)
     {
-      alarm_mesafesi = 50;
+      alarm_distance = 50;
       digitalWrite(led1 , 1);
       digitalWrite(led2 , 1);
       digitalWrite(led3 , 1);
@@ -94,7 +94,7 @@ void setup()
       digitalWrite(led5 , 1);
     }
 
-    if (digitalRead(buton) == 1)
+    if (digitalRead(button) == 1)
       break;
   }
 }
@@ -105,8 +105,8 @@ void loop()
   {
     sg90.write(pos);
     delay(15);
-    mesafe = mesafe_olc();
-    if (mesafe <= alarm_mesafesi)
+    distance = distance_olc();
+    if (distance <= alarm_distance)
     {
       digitalWrite(led1 , 1);
       digitalWrite(led2 , 1);
@@ -115,7 +115,7 @@ void loop()
       digitalWrite(led5 , 1);
       digitalWrite(buzzer , 1);
     }
-    if (digitalRead(buton) == 1)
+    if (digitalRead(button) == 1)
     {
       digitalWrite(led1 , 0);
       digitalWrite(led2 , 0);
@@ -129,8 +129,8 @@ void loop()
   {
     sg90.write(pos);
     delay(15);
-    mesafe = mesafe_olc();
-    if (mesafe <= alarm_mesafesi)
+    distance = distance_olc();
+    if (distance <= alarm_distance)
     {
       digitalWrite(led1 , 1);
       digitalWrite(led2 , 1);
@@ -139,7 +139,7 @@ void loop()
       digitalWrite(led5 , 1);
       digitalWrite(buzzer , 1);
     }
-    if (digitalRead(buton) == 1)
+    if (digitalRead(button) == 1)
     {
       digitalWrite(led1 , 0);
       digitalWrite(led2 , 0);
@@ -150,13 +150,12 @@ void loop()
     }
   }
 }
-int mesafe_olc()
+int distance_olc()
 {
   digitalWrite(trig , HIGH);
   delay(1);
   digitalWrite(trig , LOW);
-  sure = pulseIn(echo , HIGH);
-  mesafe = (sure / 2) / 28.5;
-  return mesafe;
+  time = pulseIn(echo , HIGH);
+  distance = (time / 2) / 28.5;
+  return distance;
 }
-
