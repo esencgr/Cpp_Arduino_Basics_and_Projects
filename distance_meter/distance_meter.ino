@@ -7,15 +7,13 @@ const int echo = 8;
 int mesafe ;
 int sure;
 
-void setup()
-{
+void setup(){
   pinMode(trig , OUTPUT);
   pinMode(echo , INPUT);
   lcd.begin(16, 2);
 }
 
-void loop()
-{
+void loop(){
   digitalWrite(trig , HIGH);
   delay(1);
   digitalWrite(trig , LOW);
@@ -29,5 +27,4 @@ void loop()
   lcd.print("cm");
   lcd.clear();
   delay(250);
-  }
-
+}

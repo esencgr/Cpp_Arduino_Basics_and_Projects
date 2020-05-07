@@ -1,6 +1,6 @@
-
 #include <LiquidCrystal.h>
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
 const int  trig = 6;
 const int   echo = 7;
 const int kalibButon = 8;
@@ -10,22 +10,18 @@ int mesafe = 0;
 int ilkmesafe;
 
 void setup() {
-   lcd.begin(16, 2);
+  lcd.begin(16, 2);
   pinMode(trig, OUTPUT);
   pinMode(echo, INPUT);
   pinMode(kalibButon, INPUT);
   pinMode(olcmeButon, INPUT);
-
-  while (digitalRead(kalibButon) == LOW) 
-{
+  while (digitalRead(kalibButon) == LOW){
     lcd.setCursor(2, 0);
     lcd.print("KALiBRASYON iCiN");
     lcd.setCursor(2, 1);
     lcd.print(" BUTONA BASINIZ ");
     delay(100);
-
-    if (digitalRead(kalibButon) == HIGH) 
-{
+    if (digitalRead(kalibButon) == HIGH){
       delay(50);
       ilkmesafe = mesafeolc();
       lcd.clear();
@@ -41,11 +37,8 @@ void setup() {
   }
 }
 
-
-void loop() 
-{
-  if (digitalRead(olcmeButon) == HIGH) 
-{
+void loop(){
+  if (digitalRead(olcmeButon) == HIGH){
     lcd.setCursor(0, 0);
     lcd.print("BOYUNUZ");
     lcd.setCursor(0, 1);
@@ -55,23 +48,21 @@ void loop()
     delay(2000);
     lcd.clear(); 
   }
-    else 
-{
-      lcd.setCursor(0, 0);
-      lcd.print("   OLCUM iCiN   ");
-      lcd.setCursor(0, 1);
-      lcd.print(" BUTONA BASINIZ ");
-      delay(100);
-      lcd.clear();
-    }
+  else{
+    lcd.setCursor(0, 0);
+    lcd.print("   OLCUM iCiN   ");
+    lcd.setCursor(0, 1);
+    lcd.print(" BUTONA BASINIZ ");
+    delay(100);
+    lcd.clear();
   }
+}
 
-  int mesafeolc() 
-{
+int mesafeolc(){
     digitalWrite(trig, HIGH);
     delay(1);
     digitalWrite(trig, LOW);
     sure = pulseIn(echo, HIGH);
     mesafe = (sure / 2) / 27.6;
     return mesafe;
-  }
+}
